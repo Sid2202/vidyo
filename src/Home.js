@@ -39,7 +39,7 @@ function Home(){
                         onUrlChange={handleUrlChange}
                     />
                 </div>
-                <div className='basis-1/4 shrink p-4 min-w-8'>
+                <div className='basis-1/4 shrink p-4 min-w-2'>
                     <Metadata
                         metadata={videoState.metadata} 
                     />

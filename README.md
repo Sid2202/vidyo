@@ -1,5 +1,9 @@
 # MetaVideo
-
+    <img
+        src=“public/Screenshot 2023-11-10 at 11.36.29 PM.png”
+        raw=true
+        alt=“Screenshot”
+    />
 Go to [https://meta-video.vercel.app/] (https://meta-video.vercel.app/) to view the app
 But, you gotta run the server too.
 
