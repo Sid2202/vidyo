@@ -35,7 +35,12 @@ const Video = ({ onMeta, onUrlChange}) => {
 
         try {
             // Send the file to the server
-            const response = await axios.post('http://localhost:3001/check-audio', formData);
+            const response = await axios.post('https://metavideo-api.netlify.app/check-audio', formData, {
+                headers: {
+                    // 'Content-Type': 'multipart/form-data',
+                    'Access-Control-Allow-Origin': '*'
+                  },
+            });
 
             // Check the server response
             if (response.data.hasAudio) {
