@@ -92,7 +92,7 @@ const Video = ({ onMeta, onUrlChange}) => {
 
     useEffect(() => {
         if (videoUrl) {
-            onUrlChange(videoUrl)
+        onUrlChange(videoUrl)
           const canvas = canvasRef.current;
           const context = canvas.getContext('2d');
           const video = document.createElement('video');
