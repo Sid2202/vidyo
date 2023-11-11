@@ -35,7 +35,7 @@ const Video = ({ onMeta, onUrlChange}) => {
 
         try {
             // Send the file to the server
-            const response = await axios.post('https://vidyo.onrender.com//check-audio', formData, {
+            const response = await axios.post('https://vidyo.onrender.com/check-audio', formData, {
                 headers: {
                     // 'Content-Type': 'multipart/form-data',
                     'Access-Control-Allow-Origin': '*'
