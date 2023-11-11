@@ -33,36 +33,36 @@ const Video = ({ onMeta, onUrlChange}) => {
         const formData = new FormData();
         formData.append('video', file);
 
-        // try {
-        //     // Send the file to the server
-        //     const response = await axios.post('https://vidyo-api.vercel.app/check-audio', formData, {
-        //         headers: {
-        //             // 'Content-Type': 'multipart/form-data',
-        //             'Access-Control-Allow-Origin': '*'
-        //           },
-        //     });
+        try {
+            // Send the file to the server
+            const response = await axios.post('https://vidyo-api.vercel.app/check-audio', formData, {
+                headers: {
+                    // 'Content-Type': 'multipart/form-data',
+                    'Access-Control-Allow-Origin': '*'
+                  },
+            });
 
-        //     // Check the server response
-        //     if (response.data.hasAudio) {
+            // Check the server response
+            if (response.data.hasAudio) {
                 const url = URL.createObjectURL(file)
                 setVideoUrl(url);
                 onUrlChange(url)
-                // onMeta(response.data.metadata);
-        //     } else {
-        //         console.log('File does not have audio.');
-        //         toast('🚨Upload a file which has audio!🚨', {
-        //             position: "top-right",
-        //             autoClose: 5000,
-        //             hideProgressBar: false,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: "light",
-        //             });            }
-        // } catch (error) {
-        //     console.error('Error uploading file:', error);
-        // }
+                onMeta(response.data.metadata);
+            } else {
+                console.log('File does not have audio.');
+                toast('🚨Upload a file which has audio!🚨', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     }
 
     const handleCanvasClick = () =>{
