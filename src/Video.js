@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import play from './images/play.svg';
 import pause from './images/pause.svg';
+import { upload } from '@vercel/blob/client';
 
 
 const Video = ({ onMeta, onUrlChange}) => {
@@ -13,6 +14,7 @@ const Video = ({ onMeta, onUrlChange}) => {
     const [showControls, setShowControls] = useState(false)
     const [totalDuration, setTotalDuration] = useState(0);
     const [currentProgress, setCurrentProgress] = useState(0);
+    const [hasAudio, setHasAudio] = useState(false);
 
     const canvasRef = useRef(null)
     const wavesurferRef = useRef(null)
@@ -33,36 +35,36 @@ const Video = ({ onMeta, onUrlChange}) => {
         const formData = new FormData();
         formData.append('video', file);
 
-        // try {
-        //     // Send the file to the server
-        //     const response = await axios.post('https://vidyo-api.vercel.app/check-audio', formData, {
-        //         headers: {
-        //             // 'Content-Type': 'multipart/form-data',
-        //             'Access-Control-Allow-Origin': '*'
-        //           },
-        //     });
+        try {
+            // Send the file to the server
+            const response = await axios.post('https://vidyo-api.vercel.app/check-audio', formData, {
+                headers: {
+                    // 'Content-Type': 'multipart/form-data',
+                    'Access-Control-Allow-Origin': '*'
+                  },
+            });
 
-        //     // Check the server response
-        //     if (response.data.hasAudio) {
+            // Check the server response
+            if (response.data.hasAudio) {
                 const url = URL.createObjectURL(file)
                 setVideoUrl(url);
                 onUrlChange(url)
-                // onMeta(response.data.metadata);
-        //     } else {
-        //         console.log('File does not have audio.');
-        //         toast('🚨Upload a file which has audio!🚨', {
-        //             position: "top-right",
-        //             autoClose: 5000,
-        //             hideProgressBar: false,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: "light",
-        //             });            }
-        // } catch (error) {
-        //     console.error('Error uploading file:', error);
-        // }
+                onMeta(response.data.metadata);
+            } else {
+                console.log('File does not have audio.');
+                toast('🚨Upload a file which has audio!🚨', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     }
 
     const handleCanvasClick = () =>{
@@ -101,14 +103,24 @@ const Video = ({ onMeta, onUrlChange}) => {
           const video = document.createElement('video');
           video.src = videoUrl;
           video.controls = true
-    
-        //   const hasAudio = video.audioTracks && video.audioTracks.length > 0;
 
-            // if (hasAudio) {
-            // console.log('The video has audio.');
-            // } else {
-            // console.log('The video does not have audio.');
-            // }
+          const hasAudio = video.audioTracks && video.audioTracks.length > 0;
+          setHasAudio(hasAudio);
+        
+        //   if (!hasAudio) {
+        //         toast('🚨Upload a file with audio!🚨', {
+        //             position: "top-right",
+        //             autoClose: 5000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "light",
+        //         });
+
+        //         // setVideoUrl(""); // Set videoUrl to an empty string or null
+        //     }
             
           video.addEventListener('loadeddata', () => {
             video.play();
@@ -117,6 +129,14 @@ const Video = ({ onMeta, onUrlChange}) => {
             setIsPlaying(true);
 
             drawVideoFrame(video, context);
+
+            const metadata = {
+                duration: video.duration,
+                width: video.videoWidth,
+                height: video.videoHeight,
+            };
+
+            onMeta(metadata);
           });
 
             video.addEventListener('progress', handleProgress);
@@ -138,7 +158,6 @@ const Video = ({ onMeta, onUrlChange}) => {
         }
     }, [videoUrl, setVideoUrl]);
 
- 
 
 
     return(
