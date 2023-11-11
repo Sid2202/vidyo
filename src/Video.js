@@ -13,6 +13,7 @@ const Video = ({ onMeta, onUrlChange}) => {
     const [showControls, setShowControls] = useState(false)
     const [totalDuration, setTotalDuration] = useState(0);
     const [currentProgress, setCurrentProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const canvasRef = useRef(null)
     const wavesurferRef = useRef(null)
@@ -32,8 +33,10 @@ const Video = ({ onMeta, onUrlChange}) => {
 
         const formData = new FormData();
         formData.append('video', file);
+        
 
         try {
+            setIsLoading(true);
             // Send the file to the server
             const response = await axios.post('https://vidyo.onrender.com/check-audio', formData, {
                 headers: {
@@ -62,6 +65,8 @@ const Video = ({ onMeta, onUrlChange}) => {
                     });            }
         } catch (error) {
             console.error('Error uploading file:', error);
+        }finally {
+            setIsLoading(false);
         }
     }
 
@@ -185,6 +190,14 @@ const Video = ({ onMeta, onUrlChange}) => {
                         <div ref={wavesurferRef} />
                     </div>
                 }
+
+                {isLoading && (
+                    <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                        <div className="loader">
+                            <p className='text-3xl font-bold text-purple-800'>Hang tight! It is going to take a few seconds...</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
